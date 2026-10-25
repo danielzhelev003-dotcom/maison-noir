@@ -7,7 +7,7 @@
   <meta name="description" content="Maison Noir. Sunglasses, hats and accessories.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -70,6 +70,8 @@
     </symbol>
   </svg>
 
+  <div class="cursor" aria-hidden="true"><span></span></div>
+
   <div class="announce">Free shipping on orders over €150 · Returns within 30 days</div>
 
   <header class="nav">
@@ -78,7 +80,7 @@
       <a href="#shop" data-jump="sunglasses">Sunglasses</a>
       <a href="#shop" data-jump="hats">Hats</a>
       <a href="#shop" data-jump="accessories">Accessories</a>
-      <a href="#about">About</a>
+      <a href="#lab">Lens Lab</a>
     </nav>
     <a href="#" class="nav__logo">Maison Noir</a>
     <div class="nav__right">
@@ -89,29 +91,43 @@
   </header>
 
   <main>
-    <!-- Hero: two product tiles -->
-    <section class="hero">
-      <a href="#shop" class="hero__tile" data-jump="sunglasses">
-        <svg class="hero__art"><use href="#p-round"/></svg>
-        <div class="hero__label">
-          <span>Le Soleil — Collection 01</span>
-          <strong>Shop sunglasses</strong>
-        </div>
-      </a>
-      <a href="#shop" class="hero__tile hero__tile--dark" data-jump="hats">
-        <svg class="hero__art"><use href="#p-fedora"/></svg>
-        <div class="hero__label">
-          <span>New in</span>
-          <strong>Shop hats</strong>
-        </div>
-      </a>
+    <!-- 1. Hero: look through the lenses -->
+    <section class="hero" id="hero">
+      <div class="hero__layer hero__layer--base">
+        <p class="hero__kicker">Collection 01 — Le Soleil</p>
+        <h1 class="hero__title">See less.<br>Look <em>more.</em></h1>
+      </div>
+      <div class="hero__layer hero__layer--tint" aria-hidden="true">
+        <div class="hero__sun"></div>
+        <p class="hero__kicker">UV400 · Polarised · Cat. 3</p>
+        <p class="hero__title">See less.<br>Look <em>more.</em></p>
+      </div>
+      <svg class="hero__frame" viewBox="-230 -100 460 200" aria-hidden="true">
+        <circle cx="-105" cy="0" r="90" fill="none" stroke="#111" stroke-width="12"/>
+        <circle cx="105" cy="0" r="90" fill="none" stroke="#111" stroke-width="12"/>
+        <path d="M-18 -20 Q0 -36 18 -20" fill="none" stroke="#111" stroke-width="10"/>
+        <path d="M-195 -18 L-228 -26 M195 -18 L228 -26" stroke="#111" stroke-width="10" stroke-linecap="round"/>
+        <path d="M-150 -50 Q-130 -72 -100 -72 M60 -50 Q80 -72 110 -72" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+      <div class="hero__foot">
+        <span class="hero__hint">Move to look through the lens</span>
+        <a href="#shop" class="hero__cta">Shop the collection ↓</a>
+      </div>
     </section>
 
-    <!-- Products -->
+    <!-- 2. Velocity marquee -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track" id="marquee">
+        <span>Sunglasses</span><i>✦</i><span class="outline">Hats</span><i>✦</i><span>Accessories</span><i>✦</i><span class="outline serif">Maison Noir</span><i>✦</i>
+        <span>Sunglasses</span><i>✦</i><span class="outline">Hats</span><i>✦</i><span>Accessories</span><i>✦</i><span class="outline serif">Maison Noir</span><i>✦</i>
+      </div>
+    </div>
+
+    <!-- 3. Products -->
     <section class="shop" id="shop">
-      <div class="shop__head">
-        <h1>Shop all</h1>
-        <div class="filters" role="tablist">
+      <div class="shop__head" data-reveal>
+        <h2>Shop <em>all</em></h2>
+        <div class="filters">
           <button class="is-active" data-filter="all">All</button>
           <button data-filter="sunglasses">Sunglasses</button>
           <button data-filter="hats">Hats</button>
@@ -120,42 +136,42 @@
       </div>
 
       <div class="grid">
-        <article class="card" data-cat="sunglasses">
+        <article class="card" data-cat="sunglasses" data-reveal>
           <div class="card__img"><span class="card__badge">New</span><svg><use href="#p-round"/></svg><button class="card__add">Add to bag</button></div>
           <div class="card__info"><h3>Le Rond</h3><span>€210</span></div>
           <div class="card__swatches"><i style="--c:#8a5a32"></i><i style="--c:#111"></i></div>
         </article>
-        <article class="card" data-cat="sunglasses">
+        <article class="card" data-cat="sunglasses" data-reveal>
           <div class="card__img"><svg><use href="#p-square"/></svg><button class="card__add">Add to bag</button></div>
           <div class="card__info"><h3>Le Carré</h3><span>€190</span></div>
           <div class="card__swatches"><i style="--c:#111"></i><i style="--c:#6b5a4a"></i><i style="--c:#d8cfc2"></i></div>
         </article>
-        <article class="card" data-cat="hats">
+        <article class="card" data-cat="hats" data-reveal>
           <div class="card__img"><svg><use href="#p-bucket"/></svg><button class="card__add">Add to bag</button></div>
           <div class="card__info"><h3>Le Bob</h3><span>€95</span></div>
           <div class="card__swatches"><i style="--c:#111"></i><i style="--c:#e9e4da"></i></div>
         </article>
-        <article class="card" data-cat="sunglasses">
+        <article class="card" data-cat="sunglasses" data-reveal>
           <div class="card__img"><svg><use href="#p-cat"/></svg><button class="card__add">Add to bag</button></div>
           <div class="card__info"><h3>Le Chat</h3><span>€220</span></div>
           <div class="card__swatches"><i style="--c:#111"></i><i style="--c:#7a1f1f"></i></div>
         </article>
-        <article class="card" data-cat="hats">
+        <article class="card" data-cat="hats" data-reveal>
           <div class="card__img"><span class="card__badge">Bestseller</span><svg><use href="#p-fedora"/></svg><button class="card__add">Add to bag</button></div>
           <div class="card__info"><h3>Le Fedora</h3><span>€160</span></div>
           <div class="card__swatches"><i style="--c:#1c1c1c"></i><i style="--c:#c9b79c"></i></div>
         </article>
-        <article class="card" data-cat="sunglasses">
+        <article class="card" data-cat="sunglasses" data-reveal>
           <div class="card__img"><svg><use href="#p-aviator"/></svg><button class="card__add">Add to bag</button></div>
           <div class="card__info"><h3>L'Aviateur</h3><span>€240</span></div>
           <div class="card__swatches"><i style="--c:#9a9a9a"></i><i style="--c:#b49a6a"></i></div>
         </article>
-        <article class="card" data-cat="hats">
+        <article class="card" data-cat="hats" data-reveal>
           <div class="card__img"><svg><use href="#p-cap"/></svg><button class="card__add">Add to bag</button></div>
           <div class="card__info"><h3>La Casquette</h3><span>€75</span></div>
           <div class="card__swatches"><i style="--c:#111"></i><i style="--c:#2c3a2f"></i></div>
         </article>
-        <article class="card" data-cat="accessories">
+        <article class="card" data-cat="accessories" data-reveal>
           <div class="card__img"><svg><use href="#p-chain"/></svg><button class="card__add">Add to bag</button></div>
           <div class="card__info"><h3>La Chaîne</h3><span>€65</span></div>
           <div class="card__swatches"><i style="--c:#b49a6a"></i><i style="--c:#c0c0c0"></i></div>
@@ -163,15 +179,108 @@
       </div>
     </section>
 
-    <!-- About -->
+    <!-- 4. Lens Lab -->
+    <section class="lab" id="lab">
+      <div class="lab__stage" id="lab-stage">
+        <svg viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice" class="lab__svg">
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#bcd9ee"/>
+              <stop offset=".6" stop-color="#f6efe2"/>
+              <stop offset="1" stop-color="#f4d9b4"/>
+            </linearGradient>
+            <linearGradient id="mirror" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#e9edf2"/>
+              <stop offset=".45" stop-color="#8d96a3"/>
+              <stop offset=".55" stop-color="#cfd5dc"/>
+              <stop offset="1" stop-color="#5f6670"/>
+            </linearGradient>
+          </defs>
+          <!-- scene -->
+          <rect width="600" height="600" fill="url(#sky)"/>
+          <circle cx="430" cy="190" r="56" fill="#fff4d6"/>
+          <path d="M0 400 Q120 330 240 380 T600 350 V600 H0 Z" fill="#c9a77f"/>
+          <path d="M0 450 Q160 400 320 440 T600 430 V600 H0 Z" fill="#8f6b4c"/>
+          <path d="M0 520 Q200 480 400 510 T600 500 V600 H0 Z" fill="#4c3a2c"/>
+          <g fill="#2a211a"><path d="M90 470 l10 -60 l10 60z"/><path d="M500 470 l8 -48 l8 48z"/><path d="M530 476 l6 -36 l6 36z"/></g>
+          <!-- draggable glasses -->
+          <g id="lab-glasses" class="lab__glasses">
+            <g class="lab__lenses">
+              <path id="lens-l" d="M120 250 Q120 228 144 228 H270 Q290 228 290 250 V280 Q290 352 210 352 Q130 352 122 290 Z"/>
+              <path id="lens-r" d="M480 250 Q480 228 456 228 H330 Q310 228 310 250 V280 Q310 352 390 352 Q470 352 478 290 Z"/>
+            </g>
+            <g fill="none" stroke="#111" stroke-width="12" stroke-linejoin="round">
+              <path d="M120 250 Q120 228 144 228 H270 Q290 228 290 250 V280 Q290 352 210 352 Q130 352 122 290 Z"/>
+              <path d="M480 250 Q480 228 456 228 H330 Q310 228 310 250 V280 Q310 352 390 352 Q470 352 478 290 Z"/>
+              <path d="M290 250 Q300 236 310 250"/>
+              <path d="M120 240 L86 232 M480 240 L514 232" stroke-linecap="round"/>
+            </g>
+            <path d="M140 250 L190 250 M330 250 L380 250" stroke="#fff" stroke-opacity=".55" stroke-width="6" stroke-linecap="round"/>
+          </g>
+        </svg>
+        <span class="lab__drag">Drag the frame ⟷</span>
+      </div>
+      <div class="lab__panel" data-reveal>
+        <p class="eyebrow">Lens Lab</p>
+        <h2>Choose how the <em>world</em> looks.</h2>
+        <div class="tints" role="radiogroup" aria-label="Lens tint">
+          <button role="radio" class="is-active" style="--t:#141414" data-tint="noir">Noir</button>
+          <button role="radio" style="--t:#a0521a" data-tint="amber">Amber</button>
+          <button role="radio" style="--t:#c2566e" data-tint="rose">Rosé</button>
+          <button role="radio" style="--t:#1f5f8b" data-tint="ocean">Ocean</button>
+          <button role="radio" style="--t:#4f6b4a" data-tint="sage">Sage</button>
+          <button role="radio" style="--t:linear-gradient(135deg,#e9edf2,#5f6670)" data-tint="mirror">Mirror</button>
+        </div>
+        <div class="lab__info">
+          <h3 id="tint-name">Noir</h3>
+          <p id="tint-desc">Deep grey, true colour. The classic for full sun.</p>
+          <ul>
+            <li><span>Protection</span><span id="tint-uv">UV400 · Cat. 3</span></li>
+            <li><span>Light through</span><span id="tint-vlt">12%</span></li>
+          </ul>
+        </div>
+        <a href="#shop" class="btn" data-jump="sunglasses">Shop with this lens</a>
+      </div>
+    </section>
+
+    <!-- 5. Golden hour (pinned scroll) -->
+    <section class="hour" id="hour">
+      <div class="hour__sticky">
+        <div class="hour__stars"></div>
+        <div class="hour__sun"></div>
+        <div class="hour__sea"></div>
+        <div class="hour__content">
+          <p class="eyebrow">From noon to after dark</p>
+          <div class="hour__clock" id="clock">12:00</div>
+          <div class="hour__slides">
+            <div class="hour__slide is-active">
+              <svg><use href="#p-square"/></svg>
+              <p><strong>Noon.</strong> Le Carré, dark grey lens for the hardest light.</p>
+            </div>
+            <div class="hour__slide">
+              <svg><use href="#p-round"/></svg>
+              <p><strong>Golden hour.</strong> Le Rond, amber lens that warms everything.</p>
+            </div>
+            <div class="hour__slide">
+              <svg><use href="#p-fedora"/></svg>
+              <p><strong>After dark.</strong> Le Fedora. Glasses off, hat on.</p>
+            </div>
+          </div>
+        </div>
+        <div class="hour__bar"><span id="hour-bar"></span></div>
+      </div>
+    </section>
+
+    <!-- 6. About: words light up on scroll -->
     <section class="about" id="about">
-      <p>Maison Noir makes sunglasses, hats and accessories in small runs. Italian acetate, wool felt, polarised lenses. Nothing extra.</p>
+      <p class="eyebrow">The house</p>
+      <p class="about__text" id="about-text">Maison Noir makes sunglasses, hats and accessories in small runs. Italian acetate, wool felt, polarised lenses. Made slowly, worn for years, and nothing extra.</p>
     </section>
 
     <!-- Newsletter -->
-    <section class="news">
-      <h2>Newsletter</h2>
-      <p>New drops and restocks first.</p>
+    <section class="news" data-reveal>
+      <h2>Le Club <em>Noir</em></h2>
+      <p>New drops and restocks first. One email a month.</p>
       <form class="news__form" id="news-form">
         <label for="email" class="sr-only">Email address</label>
         <input id="email" type="email" placeholder="Email address" required>
@@ -195,6 +304,7 @@
         <a href="#">Instagram</a><a href="#">TikTok</a><a href="#">Pinterest</a>
       </div>
     </div>
+    <div class="footer__mark" id="footer-mark" aria-label="Maison Noir">Maison Noir</div>
     <div class="footer__base">
       <span>© 2026 Maison Noir</span>
       <span>Terms · Privacy</span>
@@ -203,49 +313,6 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script>
-    // Mobile menu
-    const nav = document.querySelector('.nav');
-    const toggle = document.querySelector('.nav__toggle');
-    toggle.addEventListener('click', () => {
-      const open = nav.classList.toggle('is-open');
-      toggle.setAttribute('aria-expanded', open);
-      toggle.textContent = open ? 'Close' : 'Menu';
-    });
-
-    // Category filter
-    const buttons = document.querySelectorAll('[data-filter]');
-    const cards = document.querySelectorAll('.card');
-    function filter(cat) {
-      buttons.forEach(b => b.classList.toggle('is-active', b.dataset.filter === cat));
-      cards.forEach(c => c.hidden = cat !== 'all' && c.dataset.cat !== cat);
-    }
-    buttons.forEach(b => b.addEventListener('click', () => filter(b.dataset.filter)));
-    document.querySelectorAll('[data-jump]').forEach(a => a.addEventListener('click', () => {
-      filter(a.dataset.jump);
-      nav.classList.remove('is-open');
-      toggle.setAttribute('aria-expanded', false);
-      toggle.textContent = 'Menu';
-    }));
-
-    // Bag + toast
-    let bag = 0, timer;
-    const toast = document.getElementById('toast');
-    function notify(msg) {
-      toast.textContent = msg;
-      toast.classList.add('is-show');
-      clearTimeout(timer);
-      timer = setTimeout(() => toast.classList.remove('is-show'), 2200);
-    }
-    document.querySelectorAll('.card__add').forEach(btn => btn.addEventListener('click', () => {
-      document.getElementById('bag-count').textContent = ++bag;
-      notify(btn.closest('.card').querySelector('h3').textContent + ' added to bag');
-    }));
-    document.getElementById('news-form').addEventListener('submit', e => {
-      e.preventDefault();
-      e.target.reset();
-      notify('Thank you for subscribing');
-    });
-  </script>
+  <script src="main.js"></script>
 </body>
 </html>
