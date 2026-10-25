@@ -89,10 +89,32 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; }
   letter-spacing: .18em;
   text-transform: uppercase;
 }
-.nav__right { display: flex; gap: 24px; justify-content: flex-end; }
+.nav__right { display: flex; gap: 24px; align-items: center; justify-content: flex-end; }
 .nav a:not(.nav__logo):hover { opacity: .55; }
 .nav__toggle { display: none; background: none; border: 0; padding: 0; text-align: left; }
-.nav__bag { display: inline-block; background: none; border: 0; padding: 0; font: inherit; }
+.nav__bag {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 32px; height: 32px;
+  margin: -6px -6px -6px 0;
+  background: none; border: 0; padding: 0; font: inherit;
+}
+.nav__bag svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.nav__bag .bag-count {
+  position: absolute;
+  top: 0; right: -2px;
+  min-width: 16px; height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--black);
+  color: var(--white);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 16px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
 .nav__bag:hover { opacity: .55; }
 .nav__bag.is-bump { animation: bump .5s var(--ease); }
 @keyframes bump { 40% { transform: scale(1.25); } }

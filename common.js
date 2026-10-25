@@ -90,7 +90,11 @@ function itemLabel(item) {
 function renderBag() {
   const count = bagItems.reduce((n, i) => n + i.qty, 0);
   const total = bagItems.reduce((n, i) => n + i.qty * findProduct(i.id).price, 0);
-  document.querySelectorAll('.bag-count').forEach(el => el.textContent = count);
+  document.querySelectorAll('.bag-count').forEach(el => {
+    el.textContent = count;
+    el.hidden = !count;
+  });
+  document.querySelectorAll('.nav__bag').forEach(b => b.setAttribute('aria-label', `Open bag, ${count} item${count === 1 ? '' : 's'}`));
   document.getElementById('drawer-title').textContent = `Your bag (${count})`;
   document.getElementById('bag-total').textContent = money(total);
 
