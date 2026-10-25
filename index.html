@@ -12,66 +12,6 @@
 </head>
 <body>
 
-  <!-- Shared product drawings -->
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <defs>
-      <linearGradient id="tint" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#111"/>
-        <stop offset="1" stop-color="#3a3a3a"/>
-      </linearGradient>
-      <linearGradient id="amber" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#2b1d12"/>
-        <stop offset="1" stop-color="#8a5a32"/>
-      </linearGradient>
-    </defs>
-    <symbol id="p-round" viewBox="0 0 200 200">
-      <path d="M90 96 Q100 88 110 96" fill="none" stroke="#111" stroke-width="4"/>
-      <circle cx="64" cy="100" r="28" fill="url(#amber)" stroke="#111" stroke-width="5"/>
-      <circle cx="136" cy="100" r="28" fill="url(#amber)" stroke="#111" stroke-width="5"/>
-      <path d="M36 94 L20 90 M164 94 L180 90" stroke="#111" stroke-width="4" stroke-linecap="round"/>
-    </symbol>
-    <symbol id="p-square" viewBox="0 0 200 200">
-      <rect x="22" y="78" width="70" height="50" rx="10" fill="url(#tint)"/>
-      <rect x="108" y="78" width="70" height="50" rx="10" fill="url(#tint)"/>
-      <path d="M92 90 Q100 84 108 90" fill="none" stroke="#111" stroke-width="6"/>
-      <path d="M32 86 H54 M118 86 H140" stroke="#fff" stroke-opacity=".3" stroke-width="3" stroke-linecap="round"/>
-    </symbol>
-    <symbol id="p-cat" viewBox="0 0 200 200">
-      <path d="M14 82 Q40 80 90 88 Q94 120 66 124 Q30 126 24 100 Z" fill="url(#tint)"/>
-      <path d="M186 82 Q160 80 110 88 Q106 120 134 124 Q170 126 176 100 Z" fill="url(#tint)"/>
-      <path d="M90 92 Q100 86 110 92" fill="none" stroke="#111" stroke-width="5"/>
-    </symbol>
-    <symbol id="p-aviator" viewBox="0 0 200 200">
-      <path d="M24 84 H90 Q96 84 94 96 Q88 132 58 130 Q28 128 24 100 Z" fill="url(#amber)" stroke="#9a9a9a" stroke-width="3"/>
-      <path d="M176 84 H110 Q104 84 106 96 Q112 132 142 130 Q172 128 176 100 Z" fill="url(#amber)" stroke="#9a9a9a" stroke-width="3"/>
-      <path d="M90 84 H110 M88 94 Q100 90 112 94" fill="none" stroke="#9a9a9a" stroke-width="3"/>
-    </symbol>
-    <symbol id="p-bucket" viewBox="0 0 200 200">
-      <path d="M62 120 L70 64 Q100 56 130 64 L138 120 Z" fill="#1a1a1a"/>
-      <path d="M38 138 L62 112 H138 L162 138 Q100 150 38 138 Z" fill="#111"/>
-      <path d="M66 100 H134" stroke="#333" stroke-width="2" stroke-dasharray="4 4"/>
-    </symbol>
-    <symbol id="p-fedora" viewBox="0 0 200 200">
-      <ellipse cx="100" cy="128" rx="84" ry="15" fill="#111"/>
-      <path d="M56 126 Q52 78 78 70 Q100 80 122 70 Q148 78 144 126 Z" fill="#1c1c1c"/>
-      <path d="M57 112 Q100 120 143 112 L144 122 Q100 130 56 122 Z" fill="#c9b79c"/>
-    </symbol>
-    <symbol id="p-cap" viewBox="0 0 200 200">
-      <path d="M44 122 Q44 66 100 64 Q150 66 152 122 Z" fill="#111"/>
-      <path d="M44 122 Q100 116 152 122 Q176 124 182 136 Q140 140 44 130 Z" fill="#1f1f1f"/>
-      <circle cx="98" cy="66" r="5" fill="#111"/>
-      <text x="98" y="104" text-anchor="middle" font-family="Inter Tight, sans-serif" font-size="13" font-weight="600" fill="#fff" letter-spacing="2">MN</text>
-    </symbol>
-    <symbol id="p-chain" viewBox="0 0 200 200">
-      <path d="M40 60 Q100 170 160 60" fill="none" stroke="#b49a6a" stroke-width="3" stroke-dasharray="6 3"/>
-      <circle cx="40" cy="56" r="7" fill="none" stroke="#b49a6a" stroke-width="3"/>
-      <circle cx="160" cy="56" r="7" fill="none" stroke="#b49a6a" stroke-width="3"/>
-      <circle cx="100" cy="117" r="5" fill="#b49a6a"/>
-    </symbol>
-  </svg>
-
-  <div class="cursor" aria-hidden="true"><span></span></div>
-
   <div class="announce">Free shipping on orders over €150 · Returns within 30 days</div>
 
   <header class="nav">
@@ -82,11 +22,11 @@
       <a href="#shop" data-jump="accessories">Accessories</a>
       <a href="#lab">Lens Lab</a>
     </nav>
-    <a href="#" class="nav__logo">Maison Noir</a>
+    <a href="index.html" class="nav__logo">Maison Noir</a>
     <div class="nav__right">
       <a href="#" class="hide-sm">Search</a>
       <a href="#" class="hide-sm">Account</a>
-      <a href="#" class="nav__bag">Bag (<span id="bag-count">0</span>)</a>
+      <button type="button" class="nav__bag" aria-label="Open bag">Bag (<span class="bag-count">0</span>)</button>
     </div>
   </header>
 
@@ -135,48 +75,7 @@
         </div>
       </div>
 
-      <div class="grid">
-        <article class="card" data-cat="sunglasses" data-reveal>
-          <div class="card__img"><span class="card__badge">New</span><svg><use href="#p-round"/></svg><button class="card__add">Add to bag</button></div>
-          <div class="card__info"><h3>Le Rond</h3><span>€210</span></div>
-          <div class="card__swatches"><i style="--c:#8a5a32"></i><i style="--c:#111"></i></div>
-        </article>
-        <article class="card" data-cat="sunglasses" data-reveal>
-          <div class="card__img"><svg><use href="#p-square"/></svg><button class="card__add">Add to bag</button></div>
-          <div class="card__info"><h3>Le Carré</h3><span>€190</span></div>
-          <div class="card__swatches"><i style="--c:#111"></i><i style="--c:#6b5a4a"></i><i style="--c:#d8cfc2"></i></div>
-        </article>
-        <article class="card" data-cat="hats" data-reveal>
-          <div class="card__img"><svg><use href="#p-bucket"/></svg><button class="card__add">Add to bag</button></div>
-          <div class="card__info"><h3>Le Bob</h3><span>€95</span></div>
-          <div class="card__swatches"><i style="--c:#111"></i><i style="--c:#e9e4da"></i></div>
-        </article>
-        <article class="card" data-cat="sunglasses" data-reveal>
-          <div class="card__img"><svg><use href="#p-cat"/></svg><button class="card__add">Add to bag</button></div>
-          <div class="card__info"><h3>Le Chat</h3><span>€220</span></div>
-          <div class="card__swatches"><i style="--c:#111"></i><i style="--c:#7a1f1f"></i></div>
-        </article>
-        <article class="card" data-cat="hats" data-reveal>
-          <div class="card__img"><span class="card__badge">Bestseller</span><svg><use href="#p-fedora"/></svg><button class="card__add">Add to bag</button></div>
-          <div class="card__info"><h3>Le Fedora</h3><span>€160</span></div>
-          <div class="card__swatches"><i style="--c:#1c1c1c"></i><i style="--c:#c9b79c"></i></div>
-        </article>
-        <article class="card" data-cat="sunglasses" data-reveal>
-          <div class="card__img"><svg><use href="#p-aviator"/></svg><button class="card__add">Add to bag</button></div>
-          <div class="card__info"><h3>L'Aviateur</h3><span>€240</span></div>
-          <div class="card__swatches"><i style="--c:#9a9a9a"></i><i style="--c:#b49a6a"></i></div>
-        </article>
-        <article class="card" data-cat="hats" data-reveal>
-          <div class="card__img"><svg><use href="#p-cap"/></svg><button class="card__add">Add to bag</button></div>
-          <div class="card__info"><h3>La Casquette</h3><span>€75</span></div>
-          <div class="card__swatches"><i style="--c:#111"></i><i style="--c:#2c3a2f"></i></div>
-        </article>
-        <article class="card" data-cat="accessories" data-reveal>
-          <div class="card__img"><svg><use href="#p-chain"/></svg><button class="card__add">Add to bag</button></div>
-          <div class="card__info"><h3>La Chaîne</h3><span>€65</span></div>
-          <div class="card__swatches"><i style="--c:#b49a6a"></i><i style="--c:#c0c0c0"></i></div>
-        </article>
-      </div>
+      <div class="grid" id="grid"></div>
     </section>
 
     <!-- 4. Lens Lab -->
@@ -293,7 +192,7 @@
     <div class="footer__cols">
       <div>
         <h4>Shop</h4>
-        <a href="#">Sunglasses</a><a href="#">Hats</a><a href="#">Accessories</a>
+        <a href="#shop" data-jump="sunglasses">Sunglasses</a><a href="#shop" data-jump="hats">Hats</a><a href="#shop" data-jump="accessories">Accessories</a>
       </div>
       <div>
         <h4>Help</h4>
@@ -311,8 +210,8 @@
     </div>
   </footer>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-  <script src="main.js"></script>
+  <script src="products.js"></script>
+  <script src="common.js"></script>
+  <script src="home.js"></script>
 </body>
 </html>

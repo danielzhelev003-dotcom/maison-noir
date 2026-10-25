@@ -1,86 +1,30 @@
-const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const finePointer = matchMedia('(pointer: fine)').matches;
-const lerp = (a, b, t) => a + (b - a) * t;
-const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+// Home page only. Needs products.js and common.js.
 
-/* ---------- Mobile menu ---------- */
-const nav = document.querySelector('.nav');
-const toggle = document.querySelector('.nav__toggle');
-function closeMenu() {
-  nav.classList.remove('is-open');
-  toggle.setAttribute('aria-expanded', false);
-  toggle.textContent = 'Menu';
-}
-toggle.addEventListener('click', () => {
-  const open = nav.classList.toggle('is-open');
-  toggle.setAttribute('aria-expanded', open);
-  toggle.textContent = open ? 'Close' : 'Menu';
-});
-document.querySelectorAll('.nav__links a').forEach(a => a.addEventListener('click', closeMenu));
+/* ---------- Product grid + filter ---------- */
+const grid = document.getElementById('grid');
+grid.innerHTML = PRODUCTS.map(cardHTML).join('');
+initTilt(grid);
+initReveal();
 
-/* ---------- Category filter ---------- */
 const filterButtons = document.querySelectorAll('[data-filter]');
-const cards = document.querySelectorAll('.card');
 function filter(cat) {
   filterButtons.forEach(b => b.classList.toggle('is-active', b.dataset.filter === cat));
-  cards.forEach(c => c.hidden = cat !== 'all' && c.dataset.cat !== cat);
+  grid.querySelectorAll('.card').forEach(c => c.hidden = cat !== 'all' && c.dataset.cat !== cat);
 }
 filterButtons.forEach(b => b.addEventListener('click', () => filter(b.dataset.filter)));
 document.querySelectorAll('[data-jump]').forEach(a => a.addEventListener('click', () => filter(a.dataset.jump)));
-
-/* ---------- Bag + toast ---------- */
-let bag = 0, toastTimer;
-const toast = document.getElementById('toast');
-function notify(msg) {
-  toast.textContent = msg;
-  toast.classList.add('is-show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('is-show'), 2200);
+// links like ./#hats from product pages open the shop already filtered
+const jump = location.hash.slice(1);
+if (['sunglasses', 'hats', 'accessories'].includes(jump)) {
+  filter(jump);
+  document.getElementById('shop').scrollIntoView();
 }
-document.querySelectorAll('.card__add').forEach(btn => btn.addEventListener('click', () => {
-  const count = document.getElementById('bag-count');
-  count.textContent = ++bag;
-  count.parentElement.classList.remove('is-bump');
-  void count.parentElement.offsetWidth;
-  count.parentElement.classList.add('is-bump');
-  notify(btn.closest('.card').querySelector('h3').textContent + ' added to bag');
-}));
+
 document.getElementById('news-form').addEventListener('submit', e => {
   e.preventDefault();
   e.target.reset();
   notify('Welcome to Le Club Noir');
 });
-
-/* ---------- Scroll reveal ---------- */
-const revealObserver = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('is-in');
-      revealObserver.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.15 });
-document.querySelectorAll('[data-reveal]').forEach((el, i) => {
-  el.style.setProperty('--d', (i % 4) * 80 + 'ms');
-  revealObserver.observe(el);
-});
-
-/* ---------- Custom cursor ---------- */
-const cursor = document.querySelector('.cursor');
-const pointer = { x: innerWidth / 2, y: innerHeight / 2 };
-const cursorPos = { ...pointer };
-if (finePointer) {
-  document.body.classList.add('has-cursor');
-  addEventListener('pointermove', e => { pointer.x = e.clientX; pointer.y = e.clientY; });
-  document.querySelectorAll('a, button').forEach(el => {
-    el.addEventListener('mouseenter', () => cursor.classList.add('is-link'));
-    el.addEventListener('mouseleave', () => cursor.classList.remove('is-link'));
-  });
-  cards.forEach(el => {
-    el.addEventListener('mouseenter', () => cursor.classList.add('is-view'));
-    el.addEventListener('mouseleave', () => cursor.classList.remove('is-view'));
-  });
-}
 
 /* ---------- 1. Hero lens ---------- */
 const hero = document.getElementById('hero');
@@ -96,34 +40,15 @@ hero.addEventListener('pointermove', e => {
   heroLens.ty = e.clientY - r.top;
   heroLens.lastMove = performance.now();
 });
-hero.addEventListener('pointerenter', () => { heroLens.active = true; cursor.classList.add('is-hidden'); });
-hero.addEventListener('pointerleave', () => { heroLens.active = false; cursor.classList.remove('is-hidden'); });
+hero.addEventListener('pointerenter', () => { heroLens.active = true; });
+hero.addEventListener('pointerleave', () => { heroLens.active = false; });
 addEventListener('resize', placeHeroDefault);
 
 /* ---------- 2. Velocity marquee ---------- */
 const marquee = document.getElementById('marquee');
 let marqueeX = 0, lastScroll = scrollY, velocity = 0, direction = -1;
 
-/* ---------- 3. Card tilt ---------- */
-if (finePointer && !reduceMotion) {
-  document.querySelectorAll('.card__img').forEach(img => {
-    img.addEventListener('pointermove', e => {
-      const r = img.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width;
-      const py = (e.clientY - r.top) / r.height;
-      img.style.setProperty('--rx', ((0.5 - py) * 10).toFixed(2) + 'deg');
-      img.style.setProperty('--ry', ((px - 0.5) * 12).toFixed(2) + 'deg');
-      img.style.setProperty('--gx', px * 100 + '%');
-      img.style.setProperty('--gy', py * 100 + '%');
-    });
-    img.addEventListener('pointerleave', () => {
-      img.style.setProperty('--rx', '0deg');
-      img.style.setProperty('--ry', '0deg');
-    });
-  });
-}
-
-/* ---------- 4. Lens Lab ---------- */
+/* ---------- 3. Lens Lab ---------- */
 const tints = {
   noir:   { fill: '#141414', op: .78, blend: 'multiply', name: 'Noir',   desc: 'Deep grey, true colour. The classic for full sun.',  uv: 'UV400 · Cat. 3', vlt: '12%' },
   amber:  { fill: '#b8591a', op: .62, blend: 'multiply', name: 'Amber',  desc: 'Warms the light and sharpens contrast. Golden hour all day.', uv: 'UV400 · Cat. 2', vlt: '22%' },
@@ -175,7 +100,7 @@ stage.addEventListener('pointermove', e => {
   stage.classList.remove('is-dragging');
 }));
 
-/* ---------- 5. Golden hour ---------- */
+/* ---------- 4. Golden hour ---------- */
 const hour = document.getElementById('hour');
 const skyStops = [
   { p: 0,    top: [158, 201, 232], bottom: [238, 243, 244], sun: [255, 250, 230] },
@@ -211,7 +136,7 @@ function updateHour() {
   slides.forEach((s, i) => s.classList.toggle('is-active', i === idx));
 }
 
-/* ---------- 6. About words ---------- */
+/* ---------- 5. About words ---------- */
 const aboutText = document.getElementById('about-text');
 aboutText.innerHTML = aboutText.textContent.split(' ').map(w => `<span>${w}</span>`).join(' ');
 const words = aboutText.querySelectorAll('span');
@@ -222,21 +147,8 @@ function updateAbout() {
   words.forEach((w, i) => w.style.opacity = clamp(lit - i, 0.12, 1));
 }
 
-/* ---------- Footer wordmark ---------- */
-const mark = document.getElementById('footer-mark');
-mark.innerHTML = [...mark.textContent].map((c, i) =>
-  `<span style="--i:${i}" aria-hidden="true">${c === ' ' ? '&nbsp;' : c}</span>`).join('');
-new IntersectionObserver(([e]) => mark.classList.toggle('is-in', e.isIntersecting), { threshold: 0.3 }).observe(mark);
-
 /* ---------- Main loop ---------- */
 function frame(now) {
-  // cursor
-  if (finePointer) {
-    cursorPos.x = lerp(cursorPos.x, pointer.x, 0.2);
-    cursorPos.y = lerp(cursorPos.y, pointer.y, 0.2);
-    cursor.style.transform = `translate(${cursorPos.x}px, ${cursorPos.y}px)`;
-  }
-
   // hero: follow the pointer, or wander on its own when idle / on touch
   if (!heroLens.active || now - heroLens.lastMove > 2500) {
     // keep the whole frame on screen (frame is 460 units wide, scaled by --s)
