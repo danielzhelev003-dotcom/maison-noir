@@ -1,0 +1,429 @@
+<title>Maison Noir Nuit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400&display=swap" rel="stylesheet">
+<style>
+/* Layout: one dark room. A spotlight hero, a sideways gallery, a quiz, then numbers. */
+:root {
+  --bg: #0b0b0c;
+  --fg: #ece8e1;
+  --muted: #8d877e;
+  --line: #262524;
+  --lit: #d8cab3;        /* the table under the spotlight */
+  --accent: #d9a55b;     /* lamp amber */
+  --sans: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+  --display: "Bodoni Moda", "Didot", Georgia, serif;
+  --gutter: max(16px, 2.5vw);
+  --ease: cubic-bezier(.2, .7, .2, 1);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.55 var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; cursor: pointer; }
+h1, h2, h3, p { margin: 0; }
+em { font-style: italic; }
+.eyebrow { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* Header: same wordmark and bag as the main site */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); }
+.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+  padding: 18px var(--gutter);
+  background: rgba(11, 11, 12, .8); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+.nav__links { display: flex; gap: 24px; }
+.nav__links a:hover { color: var(--accent); }
+.logo { font-family: var(--sans); font-size: 20px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
+.nav__right { display: flex; justify-content: flex-end; }
+.bag { position: relative; display: grid; place-items: center; width: 32px; height: 32px; margin: -6px; background: none; border: 0; padding: 0; }
+.bag svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.bag__count { position: absolute; top: 0; right: -2px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; background: var(--accent); color: var(--bg); font-size: 10px; font-weight: 600; line-height: 16px; text-align: center; }
+.bag.is-bump { animation: bump .5s var(--ease); }
+@keyframes bump { 40% { transform: scale(1.25); } }
+
+/* 1. Spotlight hero */
+.hero { position: relative; height: min(92svh, 900px); min-height: 560px; overflow: hidden; touch-action: pan-y; }
+.hero__scene { position: absolute; inset: 0; background: radial-gradient(ellipse at 60% 40%, #e6dac6, var(--lit) 60%, #b9a88d); }
+.obj { position: absolute; padding: 0; border: 0; background: none; transform: translate(-50%, -50%) rotate(var(--r, 0deg)); transition: transform .4s var(--ease); }
+.obj svg { display: block; width: 100%; aspect-ratio: 1; filter: drop-shadow(0 18px 18px rgba(40, 25, 10, .35)); }
+.obj:hover { transform: translate(-50%, -50%) rotate(var(--r, 0deg)) scale(1.06); }
+.hero__dark {
+  position: absolute; inset: 0; pointer-events: none; background: var(--bg);
+  -webkit-mask-image: radial-gradient(circle at var(--x, 60%) var(--y, 45%), transparent 0, transparent 110px, rgba(0,0,0,.9) 230px, #000 330px);
+  mask-image: radial-gradient(circle at var(--x, 60%) var(--y, 45%), transparent 0, transparent 110px, rgba(0,0,0,.9) 230px, #000 330px);
+}
+.hero__copy {
+  position: absolute; left: var(--gutter); bottom: 48px; max-width: 760px;
+  display: grid; gap: 18px; pointer-events: none;
+  mix-blend-mode: difference; color: var(--fg);
+}
+.hero__copy h1 { font-family: var(--display); font-weight: 400; font-size: clamp(48px, 8vw, 128px); line-height: .92; letter-spacing: -.02em; text-wrap: balance; }
+.hero__copy p { font-size: 14px; color: #bdb6ab; }
+.spot-label {
+  position: absolute; z-index: 3; pointer-events: none;
+  padding: 8px 14px; border-radius: 999px; background: var(--fg); color: var(--bg);
+  font-size: 12px; font-weight: 500; white-space: nowrap;
+  transform: translate(-50%, -150%); opacity: 0; transition: opacity .25s;
+}
+.spot-label.is-on { opacity: 1; }
+.spot-label span { color: #7a7268; margin-left: 6px; }
+
+/* 2. Sideways gallery, driven by vertical scroll */
+.rail { position: relative; }
+.rail__sticky { position: sticky; top: 0; height: 100svh; overflow: hidden; display: grid; grid-template-rows: auto 1fr auto; gap: 24px; padding: 88px 0 32px; }
+.rail__head { display: flex; justify-content: space-between; align-items: end; gap: 16px; padding: 0 var(--gutter); }
+.rail__head h2 { font-family: var(--display); font-weight: 400; font-size: clamp(36px, 5vw, 72px); line-height: 1; }
+.rail__count { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 13px; }
+.rail__count strong { color: var(--fg); font-weight: 500; }
+.rail__track { display: flex; align-items: center; gap: 20px; padding: 0 var(--gutter); will-change: transform; }
+.plate { flex: none; width: min(64vw, 760px); height: min(100%, 460px); display: grid; grid-template-columns: 1.3fr 1fr; background: #141414; border: 1px solid var(--line); }
+.plate__art { position: relative; display: grid; place-items: center; background: radial-gradient(circle at 50% 45%, #efe5d5, #cdbb9f 70%); }
+.plate__art svg { width: 86%; aspect-ratio: 1; }
+.plate__no { position: absolute; top: 14px; left: 16px; font-size: 11px; letter-spacing: .2em; color: #5b4e3c; }
+.plate__body { padding: 28px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.plate__body h3 { font-family: var(--display); font-weight: 400; font-style: italic; font-size: clamp(32px, 3.4vw, 52px); line-height: 1; }
+.plate__body p { color: #b5afa5; font-size: 14px; }
+.plate__price { font-size: 18px; }
+.plate__body .btn { margin-top: auto; align-self: flex-start; }
+.rail__bar { margin: 0 var(--gutter); height: 1px; background: var(--line); }
+.rail__bar span { display: block; height: 100%; background: var(--accent); transform-origin: left; transform: scaleX(0); }
+.btn { display: inline-block; padding: 13px 22px; border-radius: 999px; border: 1px solid var(--fg); background: var(--fg); color: var(--bg); font-weight: 500; font-size: 14px; transition: background .2s, color .2s, transform .3s var(--ease); }
+.btn:hover { background: var(--accent); border-color: var(--accent); transform: translateY(-2px); }
+.btn--ghost { background: transparent; color: var(--fg); }
+
+/* 3. Frame finder quiz */
+.quiz { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: clamp(32px, 6vw, 96px); padding: 120px var(--gutter); border-top: 1px solid var(--line); }
+.quiz__intro { display: grid; gap: 18px; align-content: start; }
+.quiz__intro h2 { font-family: var(--display); font-weight: 400; font-size: clamp(40px, 5.5vw, 84px); line-height: .95; }
+.quiz__intro p { color: #b5afa5; max-width: 38ch; }
+.quiz__card { min-height: 420px; padding: clamp(24px, 3vw, 40px); border: 1px solid var(--line); background: #121212; display: flex; flex-direction: column; gap: 24px; }
+.quiz__dots { display: flex; gap: 6px; }
+.quiz__dots i { width: 28px; height: 2px; background: var(--line); transition: background .3s; }
+.quiz__dots i.is-on { background: var(--accent); }
+.quiz__q { font-family: var(--display); font-size: clamp(26px, 2.6vw, 36px); line-height: 1.1; }
+.quiz__opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.opt { text-align: left; padding: 18px; border: 1px solid var(--line); background: transparent; display: grid; gap: 4px; transition: border-color .2s, background .2s, transform .2s var(--ease); }
+.opt small { color: var(--muted); font-size: 12px; }
+.opt:hover { border-color: var(--accent); transform: translateY(-2px); }
+.quiz__step { display: grid; gap: 24px; animation: rise .5s var(--ease); }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+.result { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 24px; align-items: center; animation: rise .6s var(--ease); }
+.result__art { aspect-ratio: 1; display: grid; place-items: center; background: radial-gradient(circle, #efe5d5, #cdbb9f 70%); }
+.result__art svg { width: 90%; aspect-ratio: 1; }
+.result__body { display: grid; gap: 12px; }
+.result__body h3 { font-family: var(--display); font-style: italic; font-weight: 400; font-size: 48px; line-height: 1; }
+.result__body p { color: #b5afa5; }
+.result__actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* 4. Numbers */
+.numbers { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.num { padding: 56px var(--gutter); display: grid; gap: 10px; border-left: 1px solid var(--line); }
+.num:first-child { border-left: 0; }
+.num strong { font-family: var(--display); font-weight: 400; font-size: clamp(56px, 7vw, 112px); line-height: .9; font-variant-numeric: tabular-nums; color: var(--accent); }
+.num span { color: #b5afa5; font-size: 14px; max-width: 24ch; }
+
+/* Newsletter + footer */
+.club { padding: 120px var(--gutter); display: grid; justify-items: center; text-align: center; gap: 16px; }
+.club h2 { font-family: var(--display); font-weight: 400; font-size: clamp(40px, 6vw, 88px); line-height: 1; }
+.club p { color: #b5afa5; }
+.club form { display: flex; width: min(460px, 100%); margin-top: 12px; border-bottom: 1px solid var(--fg); }
+.club input { flex: 1; min-width: 0; background: none; border: 0; padding: 14px 2px; color: var(--fg); font: inherit; outline: none; }
+.club input::placeholder { color: var(--muted); }
+.club button { background: none; border: 0; text-transform: uppercase; letter-spacing: .18em; font-size: 12px; }
+.club button:hover { color: var(--accent); }
+.footer { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding: 28px var(--gutter) calc(28px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+.footer .logo { color: var(--fg); font-size: 16px; }
+.footer nav { display: flex; gap: 20px; }
+.footer a:hover { color: var(--fg); }
+
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 50; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; padding: 12px 20px; border-radius: 999px; background: var(--fg); color: var(--bg); font-size: 13px; transition: opacity .25s, transform .25s; }
+.toast.is-show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 860px) {
+  .nav__links { display: none; }
+  .nav { grid-template-columns: auto 1fr auto; }
+  .nav .logo { grid-column: 2; justify-self: center; font-size: 16px; }
+  .nav__right { grid-column: 3; }
+  .hero__copy { bottom: 32px; right: var(--gutter); }
+  .plate { width: 84vw; height: auto; grid-template-columns: 1fr; grid-template-rows: auto auto; }
+  .plate__art { aspect-ratio: 4 / 3; }
+  .plate__body { padding: 20px; gap: 10px; }
+  .plate__body p { display: none; }
+  .quiz { grid-template-columns: 1fr; padding: 80px var(--gutter); }
+  .quiz__opts { grid-template-columns: 1fr; }
+  .result { grid-template-columns: 1fr; }
+  .result__art { max-width: 260px; }
+  .numbers { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .num:nth-child(3) { border-left: 0; }
+  .num:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .club { padding: 80px var(--gutter); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+
+<!--SYMBOLS-->
+
+<header class="nav">
+  <nav class="nav__links" aria-label="Main">
+    <a href="#rail">Collection</a>
+    <a href="#quiz">Frame finder</a>
+    <a href="#club">Club</a>
+  </nav>
+  <a href="#" class="logo">Maison Noir</a>
+  <div class="nav__right">
+    <button type="button" class="bag" aria-label="Bag, 0 items">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8Z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></svg>
+      <span class="bag__count" hidden>0</span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="hero">
+    <div class="hero__scene" id="scene"></div>
+    <div class="hero__dark"></div>
+    <div class="spot-label" id="spot-label"></div>
+    <div class="hero__copy">
+      <p class="eyebrow">Collection 01 · After dark</p>
+      <h1>Made for the <em>other</em> side of the sun.</h1>
+      <p>Move the light to find the collection. Click a piece to add it to your bag.</p>
+    </div>
+  </section>
+
+  <section class="rail" id="rail">
+    <div class="rail__sticky">
+      <div class="rail__head">
+        <div>
+          <p class="eyebrow">The collection</p>
+          <h2>Eight pieces, <em>one run.</em></h2>
+        </div>
+        <p class="rail__count"><strong id="rail-now">01</strong> / <span id="rail-total">08</span></p>
+      </div>
+      <div class="rail__track" id="track"></div>
+      <div class="rail__bar"><span id="rail-bar"></span></div>
+    </div>
+  </section>
+
+  <section class="quiz" id="quiz">
+    <div class="quiz__intro">
+      <p class="eyebrow">Frame finder</p>
+      <h2>Three questions. <em>One pair.</em></h2>
+      <p>Tell us about your face and your days, and we will point you to the frame that fits both.</p>
+    </div>
+    <div class="quiz__card" id="quiz-card" aria-live="polite"></div>
+  </section>
+
+  <section class="numbers" aria-label="The house in numbers">
+    <div class="num"><strong data-count="6">0</strong><span>days of hand polishing for every acetate frame</span></div>
+    <div class="num"><strong data-count="300">0</strong><span>pieces per colour, then the run closes</span></div>
+    <div class="num"><strong data-count="400">0</strong><span>nanometres: UV400 blocks all light up to this wavelength</span></div>
+    <div class="num"><strong data-count="19" data-suffix=" g">0</strong><span>the weight of L'Aviateur in titanium</span></div>
+  </section>
+
+  <section class="club" id="club">
+    <p class="eyebrow">Le Club Noir</p>
+    <h2>First to see <em>the next run.</em></h2>
+    <p>One letter a month. Early access to every release.</p>
+    <form id="club-form">
+      <label for="nuit-email" class="eyebrow" hidden>Email address</label>
+      <input id="nuit-email" type="email" placeholder="Email address" required>
+      <button type="submit">Join</button>
+    </form>
+  </section>
+</main>
+
+<footer class="footer">
+  <a href="#" class="logo">Maison Noir</a>
+  <nav aria-label="Footer"><a href="#">Shipping</a><a href="#">Returns</a><a href="#">Instagram</a></nav>
+  <span>© 2026 Maison Noir</span>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const PRODUCTS = [
+  { id: 'le-rond', name: 'Le Rond', price: 210, symbol: 'p-round', note: 'A small round frame with a keyhole bridge and amber lenses.' },
+  { id: 'le-carre', name: 'Le Carré', price: 190, symbol: 'p-square', note: 'Thick square rims and true-colour grey lenses. The everyday pair.' },
+  { id: 'le-bob', name: 'Le Bob', price: 95, symbol: 'p-bucket', note: 'Washed cotton bucket hat with a short, angled brim.' },
+  { id: 'le-chat', name: 'Le Chat', price: 220, symbol: 'p-cat', note: 'A 1960s cat-eye, cut a little smaller so it reads sharp.' },
+  { id: 'le-fedora', name: 'Le Fedora', price: 160, symbol: 'p-fedora', note: 'Hand-blocked wool felt with a pinched crown.' },
+  { id: 'l-aviateur', name: "L'Aviateur", price: 240, symbol: 'p-aviator', note: 'Titanium double bridge, 19 grams, adjustable pads.' },
+  { id: 'la-casquette', name: 'La Casquette', price: 75, symbol: 'p-cap', note: 'Six-panel cotton cap with a tone-on-tone MN.' },
+  { id: 'la-chaine', name: 'La Chaîne', price: 65, symbol: 'p-chain', note: 'A fine chain that keeps your glasses close.' }
+];
+const byId = id => PRODUCTS.find(p => p.id === id);
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* Bag */
+let bag = 0, toastTimer;
+const bagBtn = document.querySelector('.bag');
+function notify(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('is-show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('is-show'), 2200);
+}
+function addToBag(id) {
+  bag++;
+  const c = bagBtn.querySelector('.bag__count');
+  c.textContent = bag;
+  c.hidden = false;
+  bagBtn.setAttribute('aria-label', `Bag, ${bag} item${bag === 1 ? '' : 's'}`);
+  bagBtn.classList.remove('is-bump'); void bagBtn.offsetWidth; bagBtn.classList.add('is-bump');
+  notify(`${byId(id).name} added to bag`);
+}
+bagBtn.addEventListener('click', () => notify(bag ? `${bag} item${bag === 1 ? '' : 's'} in your bag` : 'Your bag is empty'));
+document.addEventListener('click', e => { const b = e.target.closest('[data-add]'); if (b) addToBag(b.dataset.add); });
+
+/* 1. Spotlight */
+const hero = document.getElementById('hero');
+const scene = document.getElementById('scene');
+const label = document.getElementById('spot-label');
+// x, y in % of the hero; size in % of hero width
+const placed = [
+  ['le-rond', 62, 30, 24, -8], ['le-fedora', 86, 58, 22, 6], ['l-aviateur', 40, 18, 18, 10],
+  ['la-chaine', 80, 18, 14, 0], ['le-chat', 54, 62, 20, 4], ['la-casquette', 22, 40, 15, -12]
+];
+scene.innerHTML = placed.map(([id, x, y, w, r]) =>
+  `<button class="obj" data-add="${id}" aria-label="Add ${byId(id).name} to bag" style="left:${x}%;top:${y}%;width:max(${w}%, ${Math.round(w * 4.4)}px);--r:${r}deg"><svg><use href="#${byId(id).symbol}"/></svg></button>`).join('');
+const objs = [...scene.querySelectorAll('.obj')];
+const light = { x: 0, y: 0, tx: 0, ty: 0, last: -1e9 };
+function resetLight() { light.x = light.tx = hero.clientWidth * .6; light.y = light.ty = hero.clientHeight * .35; }
+resetLight();
+addEventListener('resize', resetLight);
+hero.addEventListener('pointermove', e => {
+  const r = hero.getBoundingClientRect();
+  light.tx = e.clientX - r.left; light.ty = e.clientY - r.top; light.last = performance.now();
+});
+hero.addEventListener('pointerdown', e => {
+  const r = hero.getBoundingClientRect();
+  light.tx = e.clientX - r.left; light.ty = e.clientY - r.top; light.last = performance.now();
+});
+
+/* 2. Sideways rail */
+const rail = document.getElementById('rail');
+const track = document.getElementById('track');
+track.innerHTML = PRODUCTS.map((p, i) => `
+  <article class="plate">
+    <div class="plate__art"><span class="plate__no">No. ${String(i + 1).padStart(2, '0')}</span><svg aria-hidden="true"><use href="#${p.symbol}"/></svg></div>
+    <div class="plate__body">
+      <h3>${p.name}</h3>
+      <p>${p.note}</p>
+      <span class="plate__price">€${p.price}</span>
+      <button class="btn" data-add="${p.id}">Add to bag</button>
+    </div>
+  </article>`).join('');
+document.getElementById('rail-total').textContent = String(PRODUCTS.length).padStart(2, '0');
+rail.style.height = `calc(${PRODUCTS.length * 55}vh + 100vh)`;
+function updateRail() {
+  const r = rail.getBoundingClientRect();
+  const p = clamp(-r.top / (r.height - innerHeight), 0, 1);
+  const max = track.scrollWidth - track.parentElement.clientWidth;
+  track.style.transform = `translateX(${-p * max}px)`;
+  document.getElementById('rail-bar').style.transform = `scaleX(${p})`;
+  document.getElementById('rail-now').textContent = String(Math.round(p * (PRODUCTS.length - 1)) + 1).padStart(2, '0');
+}
+
+/* 3. Frame finder */
+const QUESTIONS = [
+  { q: 'What shape is your face?', key: 'face', opts: [
+    ['round', 'Round', 'Soft jaw, full cheeks'], ['square', 'Square', 'Strong jaw, wide brow'],
+    ['oval', 'Oval', 'Longer than wide, balanced'], ['heart', 'Heart', 'Wider brow, narrow chin'] ] },
+  { q: 'Where will you wear them most?', key: 'where', opts: [
+    ['city', 'In the city', 'Cafés, streets, trains'], ['beach', 'By the water', 'Glare off sea and sand'],
+    ['drive', 'Driving', 'Long roads, low sun'], ['evening', 'Into the evening', 'Golden hour and after'] ] },
+  { q: 'Which colour feels like you?', key: 'mood', opts: [
+    ['black', 'All black', 'Quiet and classic'], ['warm', 'Warm tortoise', 'Brown, amber, honey'],
+    ['statement', 'A statement', 'Bordeaux, crystal, gold'] ] }
+];
+// Contrast the face: angular frames soften round faces, round frames soften square ones
+const FACE = { round: 'le-carre', square: 'le-rond', oval: 'l-aviateur', heart: 'le-chat' };
+const WHERE = {
+  city: 'It is light enough to wear all day, from the morning commute to the last coffee.',
+  beach: 'Polarised lenses cut the glare off water and sand, so you can keep your eyes open.',
+  drive: 'Polarised Cat. 3 lenses are road-legal and take the sting out of low sun.',
+  evening: 'The shape still works when the light drops and the glasses go up into your hair.'
+};
+const MOOD = { black: 'in black', warm: 'in tortoise with amber lenses', statement: 'in its boldest colour' };
+const answers = {};
+const card = document.getElementById('quiz-card');
+function renderQuiz(step) {
+  const dots = `<div class="quiz__dots">${QUESTIONS.map((_, i) => `<i class="${i <= step ? 'is-on' : ''}"></i>`).join('')}</div>`;
+  if (step < QUESTIONS.length) {
+    const Q = QUESTIONS[step];
+    card.innerHTML = `${dots}<div class="quiz__step"><p class="eyebrow">Question ${step + 1} of ${QUESTIONS.length}</p><p class="quiz__q">${Q.q}</p>
+      <div class="quiz__opts">${Q.opts.map(([v, t, s]) => `<button class="opt" data-v="${v}"><strong>${t}</strong><small>${s}</small></button>`).join('')}</div></div>`;
+    card.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => { answers[Q.key] = b.dataset.v; renderQuiz(step + 1); }));
+    return;
+  }
+  const p = byId(FACE[answers.face]);
+  card.innerHTML = `${dots}<div class="result">
+    <div class="result__art"><svg aria-hidden="true"><use href="#${p.symbol}"/></svg></div>
+    <div class="result__body"><p class="eyebrow">Your frame</p><h3>${p.name}</h3>
+      <p>${p.name} ${MOOD[answers.mood]}. Its shape balances a ${answers.face} face. ${WHERE[answers.where]}</p>
+      <p>€${p.price}</p>
+      <div class="result__actions"><button class="btn" data-add="${p.id}">Add to bag</button><button class="btn btn--ghost" id="quiz-restart">Start again</button></div>
+    </div></div>`;
+  document.getElementById('quiz-restart').addEventListener('click', () => renderQuiz(0));
+}
+renderQuiz(0);
+
+/* 4. Count-up numbers */
+const counter = new IntersectionObserver(entries => entries.forEach(e => {
+  if (!e.isIntersecting) return;
+  counter.unobserve(e.target);
+  const el = e.target, end = Number(el.dataset.count), suffix = el.dataset.suffix || '';
+  const t0 = performance.now(), dur = reduce ? 0 : 1600;
+  (function tick(now) {
+    const k = dur ? clamp((now - t0) / dur, 0, 1) : 1;
+    el.textContent = Math.round(end * (1 - Math.pow(1 - k, 3))) + suffix;
+    if (k < 1) requestAnimationFrame(tick);
+  })(t0);
+}), { threshold: .4 });
+document.querySelectorAll('[data-count]').forEach(el => counter.observe(el));
+
+document.getElementById('club-form').addEventListener('submit', e => { e.preventDefault(); e.target.reset(); notify('Welcome to Le Club Noir'); });
+
+/* Loop */
+function frame(now) {
+  if (now - light.last > 2500) {
+    const t = now / 1000, w = hero.clientWidth, h = hero.clientHeight;
+    light.tx = w * (.55 + Math.sin(t * .4) * .32);
+    light.ty = h * (.38 + Math.sin(t * .7) * .2);
+  }
+  light.x = lerp(light.x, light.tx, reduce ? 1 : .08);
+  light.y = lerp(light.y, light.ty, reduce ? 1 : .08);
+  hero.style.setProperty('--x', light.x.toFixed(1) + 'px');
+  hero.style.setProperty('--y', light.y.toFixed(1) + 'px');
+  // name the piece under the light
+  const hr = hero.getBoundingClientRect();
+  let hit = null;
+  for (const o of objs) {
+    const r = o.getBoundingClientRect();
+    const cx = r.left + r.width / 2 - hr.left, cy = r.top + r.height / 2 - hr.top;
+    if (Math.hypot(cx - light.x, cy - light.y) < Math.max(80, r.width * .45)) { hit = { o, cx, cy: r.top - hr.top }; break; }
+  }
+  if (hit) {
+    const p = byId(hit.o.dataset.add);
+    label.innerHTML = `${p.name}<span>€${p.price}</span>`;
+    label.style.left = hit.cx + 'px';
+    label.style.top = hit.cy + 'px';
+  }
+  label.classList.toggle('is-on', !!hit);
+  updateRail();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>

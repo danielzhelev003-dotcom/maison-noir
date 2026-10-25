@@ -1,0 +1,69 @@
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="g-amber" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b1d12"/><stop offset="1" stop-color="#8a5a32"/></linearGradient>
+    <linearGradient id="g-smoke" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#111"/><stop offset="1" stop-color="#3a3a3a"/></linearGradient>
+    <linearGradient id="g-green" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b2219"/><stop offset="1" stop-color="#53684a"/></linearGradient>
+    <linearGradient id="g-rose" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a1820"/><stop offset="1" stop-color="#b5606f"/></linearGradient>
+    <linearGradient id="g-mirror" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef1f4"/><stop offset=".45" stop-color="#8d96a3"/><stop offset=".55" stop-color="#cfd5dc"/><stop offset="1" stop-color="#5f6670"/></linearGradient>
+    <linearGradient id="g-tortoise" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a170b"/><stop offset=".3" stop-color="#7a4a22"/><stop offset=".55" stop-color="#3b2210"/><stop offset=".8" stop-color="#a0682f"/><stop offset="1" stop-color="#2a170b"/></linearGradient>
+  </defs>
+
+  <symbol id="p-round" viewBox="0 0 200 200">
+    <path d="M90 96 Q100 88 110 96" fill="none" style="stroke:var(--frame,#111)" stroke-width="4"/>
+    <circle cx="64" cy="100" r="28" style="fill:var(--lens,url(#g-amber));stroke:var(--frame,#111)" stroke-width="5"/>
+    <circle cx="136" cy="100" r="28" style="fill:var(--lens,url(#g-amber));stroke:var(--frame,#111)" stroke-width="5"/>
+    <path d="M36 94 L20 90 M164 94 L180 90" style="stroke:var(--frame,#111)" stroke-width="4" stroke-linecap="round"/>
+    <path d="M48 90 Q54 82 64 81 M120 90 Q126 82 136 81" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>
+  </symbol>
+
+  <symbol id="p-square" viewBox="0 0 200 200">
+    <rect x="22" y="78" width="70" height="50" rx="10" style="fill:var(--lens,url(#g-smoke));stroke:var(--frame,#111)" stroke-width="5"/>
+    <rect x="108" y="78" width="70" height="50" rx="10" style="fill:var(--lens,url(#g-smoke));stroke:var(--frame,#111)" stroke-width="5"/>
+    <path d="M92 90 Q100 84 108 90" fill="none" style="stroke:var(--frame,#111)" stroke-width="6"/>
+    <path d="M22 86 L12 84 M178 86 L188 84" style="stroke:var(--frame,#111)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M32 88 H54 M118 88 H140" stroke="#fff" stroke-opacity=".3" stroke-width="3" stroke-linecap="round"/>
+  </symbol>
+
+  <symbol id="p-cat" viewBox="0 0 200 200">
+    <path d="M14 82 Q40 80 90 88 Q94 120 66 124 Q30 126 24 100 Z" style="fill:var(--lens,url(#g-smoke));stroke:var(--frame,#111)" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M186 82 Q160 80 110 88 Q106 120 134 124 Q170 126 176 100 Z" style="fill:var(--lens,url(#g-smoke));stroke:var(--frame,#111)" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M90 92 Q100 86 110 92" fill="none" style="stroke:var(--frame,#111)" stroke-width="5"/>
+    <path d="M34 92 H60 M140 92 H166" stroke="#fff" stroke-opacity=".3" stroke-width="3" stroke-linecap="round"/>
+  </symbol>
+
+  <symbol id="p-aviator" viewBox="0 0 200 200">
+    <path d="M24 84 H90 Q96 84 94 96 Q88 132 58 130 Q28 128 24 100 Z" style="fill:var(--lens,url(#g-amber));stroke:var(--frame,#9a9a9a)" stroke-width="3"/>
+    <path d="M176 84 H110 Q104 84 106 96 Q112 132 142 130 Q172 128 176 100 Z" style="fill:var(--lens,url(#g-amber));stroke:var(--frame,#9a9a9a)" stroke-width="3"/>
+    <path d="M90 84 H110 M88 94 Q100 90 112 94 M24 88 L10 86 M176 88 L190 86" fill="none" style="stroke:var(--frame,#9a9a9a)" stroke-width="3" stroke-linecap="round"/>
+    <path d="M36 94 H60 M122 94 H146" stroke="#fff" stroke-opacity=".3" stroke-width="3" stroke-linecap="round"/>
+  </symbol>
+
+  <symbol id="p-bucket" viewBox="0 0 200 200">
+    <path d="M62 120 L70 64 Q100 56 130 64 L138 120 Z" style="fill:var(--body,#1a1a1a)"/>
+    <path d="M38 138 L62 112 H138 L162 138 Q100 150 38 138 Z" style="fill:var(--body,#1a1a1a)"/>
+    <path d="M38 138 L62 112 H138 L162 138 Q100 150 38 138 Z" fill="#000" fill-opacity=".14"/>
+    <path d="M66 100 H134 M50 130 Q100 138 150 130" fill="none" style="stroke:var(--band,#444)" stroke-width="2" stroke-dasharray="4 4"/>
+  </symbol>
+
+  <symbol id="p-fedora" viewBox="0 0 200 200">
+    <ellipse cx="100" cy="128" rx="84" ry="15" style="fill:var(--body,#1c1c1c)"/>
+    <ellipse cx="100" cy="128" rx="84" ry="15" fill="#000" fill-opacity=".18"/>
+    <path d="M56 126 Q52 78 78 70 Q100 80 122 70 Q148 78 144 126 Z" style="fill:var(--body,#1c1c1c)"/>
+    <path d="M57 112 Q100 120 143 112 L144 122 Q100 130 56 122 Z" style="fill:var(--band,#c9b79c)"/>
+  </symbol>
+
+  <symbol id="p-cap" viewBox="0 0 200 200">
+    <path d="M44 122 Q44 66 100 64 Q150 66 152 122 Z" style="fill:var(--body,#111)"/>
+    <path d="M44 122 Q100 116 152 122 Q176 124 182 136 Q140 140 44 130 Z" style="fill:var(--body,#111)"/>
+    <path d="M44 122 Q100 116 152 122 Q176 124 182 136 Q140 140 44 130 Z" fill="#000" fill-opacity=".2"/>
+    <circle cx="98" cy="66" r="5" style="fill:var(--body,#111)"/>
+    <text x="98" y="104" text-anchor="middle" font-family="Inter Tight, sans-serif" font-size="13" font-weight="600" letter-spacing="2" style="fill:var(--band,#fff)">MN</text>
+  </symbol>
+
+  <symbol id="p-chain" viewBox="0 0 200 200">
+    <path d="M40 60 Q100 170 160 60" fill="none" style="stroke:var(--metal,#b49a6a)" stroke-width="3" stroke-dasharray="6 3"/>
+    <circle cx="40" cy="56" r="7" fill="none" style="stroke:var(--metal,#b49a6a)" stroke-width="3"/>
+    <circle cx="160" cy="56" r="7" fill="none" style="stroke:var(--metal,#b49a6a)" stroke-width="3"/>
+    <circle cx="100" cy="117" r="5" style="fill:var(--metal,#b49a6a)"/>
+  </symbol>
+</svg>

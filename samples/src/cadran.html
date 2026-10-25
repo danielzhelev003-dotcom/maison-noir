@@ -1,0 +1,478 @@
+<title>Maison Noir Cadran</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Archivo:wdth,wght@62..125,500..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: an instrument panel. Swiss grid, hairline rules, one ultramarine signal colour. */
+:root {
+  --bg: #eceee9;       /* pale stone */
+  --panel: #f7f8f5;
+  --ink: #16181a;
+  --muted: #697069;
+  --line: #d2d6cf;
+  --signal: #2346c8;   /* ultramarine */
+  --sans: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+  --display: "Archivo", "Arial Black", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+  --gutter: max(16px, 2.5vw);
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; cursor: pointer; }
+h1, h2, h3, p { margin: 0; }
+.label { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.display { font-family: var(--display); font-stretch: 125%; font-weight: 800; letter-spacing: -.02em; line-height: .92; text-transform: uppercase; text-wrap: balance; }
+:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); }
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 16px var(--gutter); background: rgba(236, 238, 233, .88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); font-size: 13px; }
+.nav__links { display: flex; gap: 24px; font-family: var(--mono); font-size: 12px; text-transform: uppercase; }
+.nav__links a:hover { color: var(--signal); }
+.logo { font-family: var(--sans); font-size: 20px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
+.nav__right { display: flex; justify-content: flex-end; }
+.bag { position: relative; display: grid; place-items: center; width: 32px; height: 32px; margin: -6px; background: none; border: 0; padding: 0; }
+.bag svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+.bag__count { position: absolute; top: 0; right: -2px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; background: var(--signal); color: #fff; font-size: 10px; font-weight: 600; line-height: 16px; text-align: center; }
+.bag.is-bump { animation: bump .5s var(--ease); }
+@keyframes bump { 40% { transform: scale(1.25); } }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 13px 22px; border: 1px solid var(--ink); background: var(--ink); color: #fff; font-weight: 500; font-size: 14px; transition: background .2s, border-color .2s; }
+.btn:hover { background: var(--signal); border-color: var(--signal); }
+.btn--line { background: transparent; color: var(--ink); }
+.btn--line:hover { color: #fff; }
+
+/* 1. Sundial hero */
+.dial-hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); border-bottom: 1px solid var(--line); transition: background-color 1s; }
+.dial-hero__left { padding: 48px var(--gutter); display: grid; gap: 28px; align-content: start; border-right: 1px solid var(--line); }
+.dial-hero__left h1 { font-size: clamp(44px, 6.4vw, 104px); }
+.dial-wrap { position: relative; width: min(100%, 520px); justify-self: center; touch-action: none; user-select: none; cursor: grab; }
+.dial-wrap:active { cursor: grabbing; }
+.dial { display: block; width: 100%; height: auto; }
+.dial .face { fill: var(--panel); stroke: var(--ink); stroke-width: 1.5; }
+.dial .tick { stroke: var(--ink); stroke-width: 1; }
+.dial .tick--major { stroke-width: 2; }
+.dial .num { font-family: var(--mono); font-size: 13px; fill: var(--ink); text-anchor: middle; dominant-baseline: middle; }
+.dial .arc { fill: none; stroke: var(--signal); stroke-width: 3; stroke-linecap: round; }
+.dial .shadow { fill: var(--ink); opacity: .85; }
+.dial .knob { fill: var(--signal); stroke: var(--panel); stroke-width: 4; }
+.dial__read { position: absolute; left: 50%; top: 66%; transform: translate(-50%, -50%); text-align: center; pointer-events: none; }
+.dial__time { font-family: var(--mono); font-size: clamp(28px, 4vw, 44px); font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1; }
+.dial__hint { display: flex; justify-content: center; gap: 12px; align-items: center; }
+.dial__hint button { background: none; border: 1px solid var(--line); padding: 6px 12px; font-family: var(--mono); font-size: 11px; text-transform: uppercase; }
+.dial__hint button[aria-pressed="true"] { border-color: var(--signal); color: var(--signal); }
+.dial-hero__right { padding: 48px var(--gutter); display: grid; gap: 24px; align-content: start; }
+.reading { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--ink); }
+.reading div { padding: 14px 14px 14px 0; display: grid; gap: 6px; }
+.reading div + div { padding-left: 14px; border-left: 1px solid var(--line); }
+.reading strong { font-family: var(--mono); font-weight: 500; font-size: 20px; font-variant-numeric: tabular-nums; }
+.uv { height: 6px; background: var(--line); }
+.uv span { display: block; height: 100%; background: linear-gradient(90deg, #6aa57a, #e0b542, #e06a3a, #b2304a); transform-origin: left; transition: transform .5s var(--ease); }
+.pick { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 20px; align-items: center; padding: 20px; background: var(--panel); border: 1px solid var(--line); }
+.pick__art { aspect-ratio: 1; background: var(--bg); display: grid; place-items: center; }
+.pick__art svg { width: 92%; aspect-ratio: 1; transition: transform .5s var(--ease); }
+.pick.is-swap .pick__art svg { animation: pop .5s var(--ease); }
+@keyframes pop { from { transform: scale(.85) rotate(-6deg); opacity: .3; } }
+.pick__body { display: grid; gap: 8px; min-width: 0; }
+.pick__body h2 { font-family: var(--display); font-stretch: 110%; font-weight: 700; font-size: 30px; line-height: 1; }
+.pick__body p { color: #454b45; font-size: 14px; }
+.pick__row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.pick__row .price { font-family: var(--mono); }
+
+/* 2. 3D rack */
+.rack { padding: 96px 0; border-bottom: 1px solid var(--line); overflow: hidden; }
+.section-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; padding: 0 var(--gutter); margin-bottom: 40px; }
+.section-head h2 { font-size: clamp(36px, 5vw, 72px); }
+.rack__stage { position: relative; height: 380px; perspective: 1400px; touch-action: pan-y; cursor: grab; user-select: none; }
+.rack__ring { position: absolute; left: 50%; top: 20px; width: 0; height: 0; transform-style: preserve-3d; }
+.slot { position: absolute; width: 220px; height: 300px; left: -110px; top: 0; display: grid; grid-template-rows: 1fr auto; background: var(--panel); border: 1px solid var(--line); backface-visibility: hidden; transition: opacity .3s; }
+.slot svg { width: 90%; aspect-ratio: 1; justify-self: center; align-self: center; }
+.slot__meta { display: flex; justify-content: space-between; padding: 12px 14px; border-top: 1px solid var(--line); font-size: 13px; }
+.slot__meta span { font-family: var(--mono); }
+.rack__ctrl { display: flex; justify-content: center; align-items: center; gap: 24px; margin-top: 32px; padding: 0 var(--gutter); flex-wrap: wrap; }
+.rack__ctrl .arrow { width: 48px; height: 48px; border: 1px solid var(--ink); background: none; font-size: 18px; }
+.rack__ctrl .arrow:hover { background: var(--ink); color: #fff; }
+.rack__now { min-width: 260px; text-align: center; display: grid; gap: 4px; }
+.rack__now strong { font-family: var(--display); font-stretch: 110%; font-size: 24px; font-weight: 700; }
+
+/* 3. Try-on */
+.tryon { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border-bottom: 1px solid var(--line); }
+.tryon__stage { display: grid; place-items: center; padding: 40px var(--gutter); background: var(--panel); border-right: 1px solid var(--line); }
+.tryon__stage svg { width: min(100%, 420px); height: auto; }
+.face-skin { fill: #e9dccd; stroke: var(--ink); stroke-width: 2; }
+.face-line { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
+.worn { transition: transform .45s var(--ease), opacity .3s; }
+.tryon__panel { padding: 64px var(--gutter); display: grid; gap: 28px; align-content: start; }
+.tryon__panel h2 { font-size: clamp(36px, 4.5vw, 64px); }
+.chooser { display: grid; gap: 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px; border: 1px solid var(--line); background: var(--panel); font-size: 13px; transition: border-color .2s; }
+.chip svg { width: 34px; height: 34px; background: var(--bg); }
+.chip--text { padding: 6px 12px; height: 48px; }
+.chip[aria-pressed="true"] { border-color: var(--signal); box-shadow: inset 0 0 0 1px var(--signal); }
+.fit { display: grid; gap: 8px; max-width: 360px; }
+.fit input { accent-color: var(--signal); }
+.look-total { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding-top: 20px; border-top: 1px solid var(--ink); }
+.look-total strong { font-family: var(--mono); font-size: 20px; }
+
+/* 4. FAQ */
+.faq { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 48px; padding: 96px var(--gutter); }
+.faq h2 { font-size: clamp(36px, 4.5vw, 64px); }
+.faq details { border-top: 1px solid var(--line); }
+.faq details:last-child { border-bottom: 1px solid var(--line); }
+.faq summary { list-style: none; display: flex; justify-content: space-between; gap: 16px; padding: 20px 0; font-weight: 500; font-size: 17px; cursor: pointer; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: var(--mono); color: var(--signal); transition: transform .3s var(--ease); }
+.faq details[open] summary::after { transform: rotate(45deg); }
+.faq details p { padding: 0 0 20px; color: #454b45; max-width: 62ch; }
+
+.footer { display: grid; grid-template-columns: 1fr auto; gap: 24px; padding: 40px var(--gutter) calc(32px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: #e6e8e3; }
+.footer .logo { font-size: 18px; }
+.footer nav { display: flex; gap: 20px; font-family: var(--mono); font-size: 12px; text-transform: uppercase; }
+.footer nav a:hover { color: #9fb2ff; }
+.footer small { grid-column: 1 / -1; font-family: var(--mono); color: #8d938c; font-size: 11px; }
+
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 50; transform: translate(-50%, 20px); opacity: 0; pointer-events: none; padding: 12px 20px; background: var(--ink); color: #fff; font-size: 13px; transition: opacity .25s, transform .25s; }
+.toast.is-show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (max-width: 900px) {
+  .nav__links { display: none; }
+  .nav { grid-template-columns: auto 1fr auto; }
+  .nav .logo { grid-column: 2; justify-self: center; font-size: 16px; }
+  .nav__right { grid-column: 3; }
+  .dial-hero, .tryon, .faq { grid-template-columns: 1fr; }
+  .dial-hero__left, .tryon__stage { border-right: 0; border-bottom: 1px solid var(--line); }
+  .dial-hero__left, .dial-hero__right { padding: 32px var(--gutter); }
+  .pick { grid-template-columns: 110px minmax(0, 1fr); padding: 14px; gap: 14px; }
+  .pick__body h2 { font-size: 24px; }
+  .rack { padding: 64px 0; }
+  .rack__stage { height: 300px; }
+  .slot { width: 160px; height: 220px; left: -80px; }
+  .tryon__panel { padding: 40px var(--gutter); }
+  .faq { padding: 64px var(--gutter); gap: 24px; }
+  .footer { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+
+<!--SYMBOLS-->
+
+<header class="nav">
+  <nav class="nav__links" aria-label="Main">
+    <a href="#dial">Light</a>
+    <a href="#rack">Collection</a>
+    <a href="#tryon">Try on</a>
+    <a href="#faq">Help</a>
+  </nav>
+  <a href="#" class="logo">Maison Noir</a>
+  <div class="nav__right">
+    <button type="button" class="bag" aria-label="Bag, 0 items">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8Z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></svg>
+      <span class="bag__count" hidden>0</span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="dial-hero" id="dial">
+    <div class="dial-hero__left">
+      <p class="label">Cadran · Collection 01</p>
+      <h1 class="display">What time is your light?</h1>
+      <div class="dial-wrap" id="dial-wrap" aria-label="Sundial. Drag to change the time of day.">
+        <svg class="dial" id="dial-svg" viewBox="0 0 400 400" role="img" aria-hidden="true"></svg>
+        <div class="dial__read"><div class="dial__time" id="dial-time">12:00</div><p class="label" id="dial-phase">Hard noon</p></div>
+      </div>
+      <div class="dial__hint">
+        <span class="label">Drag the sun</span>
+        <button type="button" id="live-btn" aria-pressed="true">Live time</button>
+      </div>
+    </div>
+    <div class="dial-hero__right">
+      <p class="label">Reading</p>
+      <div class="reading">
+        <div><span class="label">Sun height</span><strong id="r-elev">0°</strong></div>
+        <div><span class="label">UV, clear July day</span><strong id="r-uv">0</strong></div>
+        <div><span class="label">Lens</span><strong id="r-cat">Cat. 3</strong></div>
+      </div>
+      <div class="uv" aria-hidden="true"><span id="uv-bar"></span></div>
+      <article class="pick" id="pick">
+        <div class="pick__art"><svg aria-hidden="true"><use id="pick-use" href="#p-square"/></svg></div>
+        <div class="pick__body">
+          <p class="label">For this light</p>
+          <h2 id="pick-name">Le Carré</h2>
+          <p id="pick-why"></p>
+          <div class="pick__row"><span class="price" id="pick-price">€190</span><button class="btn" id="pick-add">Add to bag</button></div>
+        </div>
+      </article>
+      <p class="label">Sun height and UV are a model for a clear summer day at 42° N, not a forecast.</p>
+    </div>
+  </section>
+
+  <section class="rack" id="rack">
+    <div class="section-head">
+      <h2 class="display">The rack</h2>
+      <p class="label">Drag or use the arrows · 8 pieces</p>
+    </div>
+    <div class="rack__stage" id="rack-stage"><div class="rack__ring" id="ring"></div></div>
+    <div class="rack__ctrl">
+      <button class="arrow" id="rack-prev" aria-label="Previous piece">←</button>
+      <div class="rack__now"><strong id="rack-name">Le Rond</strong><span class="label" id="rack-meta">Sunglasses · €210</span></div>
+      <button class="arrow" id="rack-next" aria-label="Next piece">→</button>
+      <button class="btn" id="rack-add">Add to bag</button>
+    </div>
+  </section>
+
+  <section class="tryon" id="tryon">
+    <div class="tryon__stage">
+      <svg viewBox="0 -30 300 410" id="tryon-svg" aria-label="Try-on preview">
+        <path class="face-line" d="M112 300 Q112 336 92 356 M188 300 Q188 336 208 356"/>
+        <ellipse class="face-skin" cx="150" cy="200" rx="92" ry="118"/>
+        <path class="face-line" d="M96 160 Q114 150 132 158 M168 158 Q186 150 204 160"/>
+        <circle cx="114" cy="186" r="5" fill="#16181a"/><circle cx="186" cy="186" r="5" fill="#16181a"/>
+        <path class="face-line" d="M150 196 Q144 226 140 236 Q150 242 160 236"/>
+        <path class="face-line" d="M126 270 Q150 284 174 270"/>
+        <g class="worn" id="worn-glasses"><use id="glasses-use" href="#p-round" x="50" y="86" width="200" height="200"/></g>
+        <g class="worn" id="worn-hat"><use id="hat-use" href="#p-fedora" x="-30" y="-110" width="360" height="360"/></g>
+      </svg>
+    </div>
+    <div class="tryon__panel">
+      <p class="label">Try-on</p>
+      <h2 class="display">Build the look.</h2>
+      <div class="chooser"><span class="label">Frame</span><div class="chips" id="frame-chips"></div></div>
+      <div class="chooser"><span class="label">Hat</span><div class="chips" id="hat-chips"></div></div>
+      <div class="fit">
+        <label class="label" for="fit-range">Fit on the nose</label>
+        <input type="range" id="fit-range" min="-14" max="14" value="0">
+      </div>
+      <div class="look-total">
+        <div><span class="label">This look</span><br><strong id="look-total">€370</strong></div>
+        <button class="btn" id="look-add">Add the look to bag</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq" id="faq">
+    <div>
+      <p class="label">Help</p>
+      <h2 class="display">Good to know.</h2>
+    </div>
+    <div>
+      <details open><summary>What does UV400 mean?</summary><p>The lenses block all ultraviolet light up to a wavelength of 400 nanometres, which covers both UVA and UVB. Every Maison Noir lens is UV400, whatever its colour.</p></details>
+      <details><summary>Which lens category do I need?</summary><p>Category 2 lenses suit everyday sun and cloudy days. Category 3 lenses are for bright sun, the beach and the mountains. Both are fine for driving. Category 4 lenses are too dark to drive in, so we do not make them.</p></details>
+      <details><summary>How do I measure my head for a hat?</summary><p>Wrap a soft tape measure around your head, about one finger above your eyebrows and ears. If you are between two sizes, choose the larger one.</p></details>
+      <details><summary>Can I return something?</summary><p>Yes. Send back anything unworn within 30 days and we refund you in full. Returns within the EU are free.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <a href="#" class="logo">Maison Noir</a>
+  <nav aria-label="Footer"><a href="#">Shipping</a><a href="#">Returns</a><a href="#">Instagram</a></nav>
+  <small>© 2026 Maison Noir · Cadran sample</small>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const PRODUCTS = [
+  { id: 'le-rond', name: 'Le Rond', cat: 'Sunglasses', price: 210, symbol: 'p-round' },
+  { id: 'le-carre', name: 'Le Carré', cat: 'Sunglasses', price: 190, symbol: 'p-square' },
+  { id: 'le-bob', name: 'Le Bob', cat: 'Hats', price: 95, symbol: 'p-bucket' },
+  { id: 'le-chat', name: 'Le Chat', cat: 'Sunglasses', price: 220, symbol: 'p-cat' },
+  { id: 'le-fedora', name: 'Le Fedora', cat: 'Hats', price: 160, symbol: 'p-fedora' },
+  { id: 'l-aviateur', name: "L'Aviateur", cat: 'Sunglasses', price: 240, symbol: 'p-aviator' },
+  { id: 'la-casquette', name: 'La Casquette', cat: 'Hats', price: 75, symbol: 'p-cap' },
+  { id: 'la-chaine', name: 'La Chaîne', cat: 'Accessories', price: 65, symbol: 'p-chain' }
+];
+const byId = id => PRODUCTS.find(p => p.id === id);
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* Bag */
+let bag = 0, toastTimer;
+const bagBtn = document.querySelector('.bag');
+function notify(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('is-show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('is-show'), 2200);
+}
+function addToBag(ids) {
+  ids = [].concat(ids);
+  bag += ids.length;
+  const c = bagBtn.querySelector('.bag__count');
+  c.textContent = bag; c.hidden = false;
+  bagBtn.setAttribute('aria-label', `Bag, ${bag} item${bag === 1 ? '' : 's'}`);
+  bagBtn.classList.remove('is-bump'); void bagBtn.offsetWidth; bagBtn.classList.add('is-bump');
+  notify(ids.map(id => byId(id).name).join(' + ') + ' added to bag');
+}
+bagBtn.addEventListener('click', () => notify(bag ? `${bag} item${bag === 1 ? '' : 's'} in your bag` : 'Your bag is empty'));
+
+/* 1. Sundial */
+const H0 = 6, H1 = 20;                         // dial runs 06:00 to 20:00
+const angleFor = h => 195 - (h - H0) * (210 / (H1 - H0)); // degrees, 0 = right, counter-clockwise
+const C = 200, R = 160;
+const pt = (deg, r) => [C + Math.cos(deg * Math.PI / 180) * r, C - Math.sin(deg * Math.PI / 180) * r];
+const svg = document.getElementById('dial-svg');
+let ticks = '';
+for (let h = H0; h <= H1; h += .5) {
+  const a = angleFor(h), major = h % 1 === 0;
+  const [x1, y1] = pt(a, R - (major ? 18 : 10)), [x2, y2] = pt(a, R - 2);
+  ticks += `<line class="tick${major ? ' tick--major' : ''}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+  if (major && h % 2 === 0) { const [tx, ty] = pt(a, R - 34); ticks += `<text class="num" x="${tx}" y="${ty}">${String(h).padStart(2, '0')}</text>`; }
+}
+svg.innerHTML = `<circle class="face" cx="${C}" cy="${C}" r="${R + 14}"/>${ticks}
+  <path class="arc" id="dial-arc" d=""/>
+  <polygon class="shadow" id="dial-shadow" points=""/>
+  <circle cx="${C}" cy="${C}" r="7" fill="#16181a"/>
+  <circle class="knob" id="dial-knob" r="13" cx="0" cy="0"/>`;
+function arcPath(h) {
+  const a0 = angleFor(H0), a1 = angleFor(h);
+  const [x0, y0] = pt(a0, R + 14), [x1, y1] = pt(a1, R + 14);
+  const large = (a0 - a1) > 180 ? 1 : 0;
+  return `M${x0} ${y0} A${R + 14} ${R + 14} 0 ${large} 1 ${x1} ${y1}`;
+}
+const PHASES = [
+  { until: 8.5, name: 'Low morning sun', id: 'le-rond', cat: 'Cat. 2', why: 'Low sun sits right in your eyes. Amber lenses soften it and keep the morning warm.' },
+  { until: 11, name: 'Bright morning', id: 'le-chat', cat: 'Cat. 3', why: 'The light is climbing fast. A close cat-eye keeps glare out from the sides.' },
+  { until: 15, name: 'Hard noon', id: 'le-carre', cat: 'Cat. 3', why: 'Full overhead sun. Dark grey lenses cut the brightness and keep colours true.' },
+  { until: 18, name: 'Soft afternoon', id: 'l-aviateur', cat: 'Cat. 2', why: 'Long shadows and glare off windows. Light titanium you can forget you are wearing.' },
+  { until: 19.6, name: 'Golden hour', id: 'le-rond', cat: 'Cat. 2', why: 'The best light of the day. Amber lenses make it look even warmer.' },
+  { until: 99, name: 'Blue hour', id: 'le-fedora', cat: 'None', why: 'The sun is down. Glasses off, hat on.' }
+];
+const SKY = [[6, [233, 226, 222]], [9, [236, 238, 233]], [13, [240, 242, 236]], [17, [238, 234, 224]], [19, [240, 222, 204]], [20, [214, 216, 228]]];
+function skyAt(h) {
+  let i = 0; while (i < SKY.length - 2 && h > SKY[i + 1][0]) i++;
+  const [ha, ca] = SKY[i], [hb, cb] = SKY[i + 1], t = clamp((h - ha) / (hb - ha), 0, 1);
+  return `rgb(${ca.map((v, j) => Math.round(lerp(v, cb[j], t))).join(',')})`;
+}
+let hour = 12, live = true, lastPhase = null;
+const liveBtn = document.getElementById('live-btn');
+function nowHour() { const d = new Date(); return d.getHours() + d.getMinutes() / 60; }
+function setHour(h) {
+  hour = clamp(h, H0, H1);
+  const a = angleFor(hour);
+  const [kx, ky] = pt(a, R + 14);
+  const knob = document.getElementById('dial-knob');
+  knob.setAttribute('cx', kx); knob.setAttribute('cy', ky);
+  document.getElementById('dial-arc').setAttribute('d', arcPath(hour));
+  // the gnomon's shadow points away from the sun
+  const sa = a + 180, [sx, sy] = pt(sa, R - 44), [lx, ly] = pt(sa + 90, 9), [rx, ry] = pt(sa - 90, 9);
+  document.getElementById('dial-shadow').setAttribute('points', `${lx},${ly} ${sx},${sy} ${rx},${ry}`);
+  const m = Math.round(hour * 60);
+  document.getElementById('dial-time').textContent = `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+  // simple clear-day model: elevation peaks at 71° around 13:30
+  const elev = Math.max(0, Math.sin(Math.PI * (hour - 5.6) / 15.8) * 71);
+  const uv = Math.round(Math.max(0, Math.pow(Math.sin(Math.PI * (hour - 5.6) / 15.8), 2.2) * 9));
+  document.getElementById('r-elev').textContent = Math.round(elev) + '°';
+  document.getElementById('r-uv').textContent = uv;
+  document.getElementById('uv-bar').style.transform = `scaleX(${uv / 11})`;
+  const phase = PHASES.find(p => hour < p.until);
+  document.getElementById('dial-phase').textContent = phase.name;
+  document.getElementById('r-cat').textContent = phase.cat;
+  document.getElementById('dial').style.backgroundColor = skyAt(hour);
+  if (phase !== lastPhase) {
+    lastPhase = phase;
+    const p = byId(phase.id);
+    document.getElementById('pick-use').setAttribute('href', '#' + p.symbol);
+    document.getElementById('pick-name').textContent = p.name;
+    document.getElementById('pick-why').textContent = phase.why;
+    document.getElementById('pick-price').textContent = '€' + p.price;
+    const pick = document.getElementById('pick');
+    pick.classList.remove('is-swap'); void pick.offsetWidth; pick.classList.add('is-swap');
+  }
+}
+document.getElementById('pick-add').addEventListener('click', () => addToBag(lastPhase.id));
+function setLive(on) { live = on; liveBtn.setAttribute('aria-pressed', on); if (on) setHour(nowHour()); }
+liveBtn.addEventListener('click', () => setLive(true));
+setInterval(() => { if (live) setHour(nowHour()); }, 30000);
+const wrap = document.getElementById('dial-wrap');
+let dragging = false;
+function hourFromPointer(e) {
+  const r = svg.getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width * 400 - C, y = C - (e.clientY - r.top) / r.height * 400;
+  let deg = Math.atan2(y, x) * 180 / Math.PI;           // -180..180
+  if (deg < -90) deg += 360;                            // keep the lower-left quadrant on the morning side
+  return H0 + (195 - deg) / (210 / (H1 - H0));
+}
+wrap.addEventListener('pointerdown', e => { dragging = true; wrap.setPointerCapture(e.pointerId); setLive(false); setHour(hourFromPointer(e)); });
+wrap.addEventListener('pointermove', e => { if (dragging) setHour(hourFromPointer(e)); });
+['pointerup', 'pointercancel'].forEach(t => wrap.addEventListener(t, () => { dragging = false; }));
+setLive(true);
+
+/* 2. 3D rack */
+const ring = document.getElementById('ring');
+const stage = document.getElementById('rack-stage');
+const N = PRODUCTS.length, STEP = 360 / N;
+ring.innerHTML = PRODUCTS.map(p => `<div class="slot"><svg aria-hidden="true"><use href="#${p.symbol}"/></svg><div class="slot__meta"><strong>${p.name}</strong><span>€${p.price}</span></div></div>`).join('');
+const slots = [...ring.children];
+let rot = 0, rotTarget = 0, rackDrag = null;
+function radius() { const w = slots[0].offsetWidth; return Math.round(w / (2 * Math.tan(Math.PI / N))) + 40; }
+function layoutRack() { const r = radius(); slots.forEach((s, i) => s.style.transform = `rotateY(${i * STEP}deg) translateZ(${r}px)`); ring.dataset.r = r; }
+layoutRack(); addEventListener('resize', layoutRack);
+const frontIndex = () => ((Math.round(-rotTarget / STEP) % N) + N) % N;
+function showFront() {
+  const p = PRODUCTS[frontIndex()];
+  document.getElementById('rack-name').textContent = p.name;
+  document.getElementById('rack-meta').textContent = `${p.cat} · €${p.price}`;
+}
+function spin(d) { rotTarget = Math.round(rotTarget / STEP) * STEP - d * STEP; showFront(); }
+document.getElementById('rack-prev').addEventListener('click', () => spin(-1));
+document.getElementById('rack-next').addEventListener('click', () => spin(1));
+document.getElementById('rack-add').addEventListener('click', () => addToBag(PRODUCTS[frontIndex()].id));
+stage.addEventListener('pointerdown', e => { rackDrag = { x: e.clientX, r: rotTarget }; stage.setPointerCapture(e.pointerId); });
+stage.addEventListener('pointermove', e => { if (rackDrag) { rotTarget = rackDrag.r + (e.clientX - rackDrag.x) * .35; showFront(); } });
+['pointerup', 'pointercancel'].forEach(t => stage.addEventListener(t, () => { if (!rackDrag) return; rackDrag = null; rotTarget = Math.round(rotTarget / STEP) * STEP; showFront(); }));
+showFront();
+
+/* 3. Try-on */
+const FRAMES = ['le-rond', 'le-carre', 'le-chat', 'l-aviateur'];
+// where each hat's brim sits in its own drawing, so it lands on the forehead
+const HATS = { 'le-fedora': { x: -30, y: -112, w: 360 }, 'le-bob': { x: 0, y: -98, w: 300 }, 'la-casquette': { x: -36, y: -110, w: 360 } };
+const look = { frame: 'le-rond', hat: 'le-fedora' };
+function chip(id, group) {
+  const p = byId(id);
+  return `<button class="chip" data-${group}="${id}"><svg aria-hidden="true" viewBox="0 0 200 200"><use href="#${p.symbol}" width="200" height="200"/></svg>${p.name}</button>`;
+}
+document.getElementById('frame-chips').innerHTML = FRAMES.map(id => chip(id, 'frame')).join('') + '<button class="chip chip--text" data-frame="">None</button>';
+document.getElementById('hat-chips').innerHTML = Object.keys(HATS).map(id => chip(id, 'hat')).join('') + '<button class="chip chip--text" data-hat="">None</button>';
+function renderLook() {
+  const fit = Number(document.getElementById('fit-range').value);
+  const g = document.getElementById('worn-glasses'), h = document.getElementById('worn-hat');
+  g.style.opacity = look.frame ? 1 : 0;
+  h.style.opacity = look.hat ? 1 : 0;
+  if (look.frame) document.getElementById('glasses-use').setAttribute('href', '#' + byId(look.frame).symbol);
+  g.style.transform = `translateY(${fit}px)`;
+  if (look.hat) {
+    const s = HATS[look.hat], u = document.getElementById('hat-use');
+    u.setAttribute('href', '#' + byId(look.hat).symbol);
+    u.setAttribute('x', s.x); u.setAttribute('y', s.y); u.setAttribute('width', s.w); u.setAttribute('height', s.w);
+  }
+  document.querySelectorAll('[data-frame]').forEach(b => b.setAttribute('aria-pressed', b.dataset.frame === look.frame));
+  document.querySelectorAll('[data-hat]').forEach(b => b.setAttribute('aria-pressed', b.dataset.hat === look.hat));
+  const items = [look.frame, look.hat].filter(Boolean);
+  document.getElementById('look-total').textContent = '€' + items.reduce((n, id) => n + byId(id).price, 0);
+  document.getElementById('look-add').disabled = !items.length;
+}
+document.getElementById('frame-chips').addEventListener('click', e => { const b = e.target.closest('[data-frame]'); if (b) { look.frame = b.dataset.frame; renderLook(); } });
+document.getElementById('hat-chips').addEventListener('click', e => { const b = e.target.closest('[data-hat]'); if (b) { look.hat = b.dataset.hat; renderLook(); } });
+document.getElementById('fit-range').addEventListener('input', renderLook);
+document.getElementById('look-add').addEventListener('click', () => addToBag([look.frame, look.hat].filter(Boolean)));
+renderLook();
+
+/* Loop: ease the rack and dim the slots facing away */
+(function frame() {
+  rot = lerp(rot, rotTarget, reduce ? 1 : .12);
+  ring.style.transform = `translateZ(-${ring.dataset.r}px) rotateY(${rot}deg)`;
+  slots.forEach((s, i) => {
+    const a = ((i * STEP + rot) % 360 + 360) % 360;
+    s.style.opacity = (.25 + .75 * (Math.cos(a * Math.PI / 180) + 1) / 2).toFixed(2);
+  });
+  requestAnimationFrame(frame);
+})();
+</script>
